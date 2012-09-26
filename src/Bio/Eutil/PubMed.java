@@ -69,15 +69,18 @@ public class PubMed {
 		ArrayList<String> tmp_store = new ArrayList<String>();
 		
 		try{
-			String urlStr = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term="+query+"&retmax="+retmax;
+			
+			URI uri = new URI("http","eutils.ncbi.nlm.nih.gov","/entrez/eutils/esearch.fcgi",
+								"db=pubmed&term="+query+"&retmax="+retmax,null);
+			URL url = uri.toURL();
+			
 			SAXReader readerx = new SAXReader();
-			Document document = readerx.read(new URL(urlStr).openStream());
+			Document document = readerx.read(url.openStream());
 			
 			max_return = document.selectSingleNode(".//Count").getText();
 			
 			Iterator PMID_List = document.selectNodes("//Id").iterator();
 			while(PMID_List.hasNext()){
-				
 				Element ele = (Element) PMID_List.next();
 				tmp_store.add(ele.getData().toString());
 			}
